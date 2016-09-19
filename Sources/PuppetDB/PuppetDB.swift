@@ -10,15 +10,7 @@ public class PuppetDB {
     
     public func getFactsForNode(nodeName: String) {
         self.get("/nodes/\(nodeName)/facts") {
-            (error, json) in
-            print(error)
-            print(json)
-        }
-    }
-    
-    public func getAllFactNames() {
-        self.get("/fact-names") {
-            (error, json) in
+            (error, json: [[String: AnyObject]]?) in
             print(error)
             print(json)
         }
@@ -26,14 +18,14 @@ public class PuppetDB {
     
     public func getAllValuesForFact(name: String) {
         self.get("/facts/\(name)") {
-            (error, json) in
+            (error, json: [[String: AnyObject]]?) in
             print(error)
             print(json)
         }
     }
     
     // MARK: Private methods
-    internal func get(_ endpoint: String, done: @escaping (_ error: Error?, _ json: [[String: AnyObject]]?) -> ()) {
+    internal func get<T>(_ endpoint: String, done: @escaping (_ error: Error?, _ json: T?) -> ()) {
         let baseUrl = self.configuration.buildUrl()
         let requestUrl = "\(baseUrl)\(endpoint)"
         var request = URLRequest(url: URL(string: requestUrl)!)
@@ -49,7 +41,7 @@ public class PuppetDB {
                 return
             }
             
-            let json = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as! [[String: AnyObject]]
+            let json = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as! T
             done(nil, json)
             
         })

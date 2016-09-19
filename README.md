@@ -20,5 +20,16 @@ puppetDB.getAllNodes(done: { (nodes: AllNodesResponse) in
 })
 ```
 
+### Get All Fact Names
+```swift
+puppetDB.getAllFactNames(done: {
+    (facts: [String]) in
+      print(facts)
+  }, error: {
+      (err: Error) -> () in
+      print(err)
+})
+```
+
 ### Licence
 MIT
